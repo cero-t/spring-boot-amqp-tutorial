@@ -17,7 +17,6 @@ public class SimpleSender {
         student.name = "TEST";
         student.score = 100;
 
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         rabbitTemplate.convertAndSend("spring-boot", student);
     }
 }
