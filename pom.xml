@@ -10,6 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>tutorial-1</module>
+        <module>tutorial-2</module>
     </modules>
 
 </project>
