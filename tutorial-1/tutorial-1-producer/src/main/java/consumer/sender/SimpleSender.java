@@ -17,6 +17,6 @@ public class SimpleSender {
         student.name = "TEST";
         student.score = 100;
 
-        rabbitTemplate.convertAndSend("spring-boot", student);
+        rabbitTemplate.convertAndSend("tutorial-1", student);
     }
 }
