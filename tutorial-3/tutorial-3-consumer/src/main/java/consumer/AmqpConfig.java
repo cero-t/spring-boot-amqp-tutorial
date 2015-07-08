@@ -1,13 +1,12 @@
 package consumer;
 
-import com.rabbitmq.client.Channel;
 import consumer.receiver.SimpleReceiver;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -22,30 +21,22 @@ public class AmqpConfig {
 
     @Bean
     Queue queue(ConnectionFactory connectionFactory) throws IOException {
-        Connection connection = null;
-        Channel channel = null;
-        String queueName = null;
-        try {
-            connection = connectionFactory.createConnection();
-            channel = connection.createChannel(false);
-            queueName = channel.queueDeclare()
-                    .getQueue();
-        } finally {
-            if (channel != null) {
-                channel.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        }
-
-        return new Queue(queueName, true);
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        return rabbitAdmin.declareQueue();
     }
 
     @Bean
-    Binding binding(Queue queue) {
+    FanoutExchange exchange(ConnectionFactory connectionFactory) {
+        FanoutExchange exchange = new FanoutExchange(EXCHANGE_NAME);
+        new RabbitAdmin(connectionFactory).declareExchange(exchange);
+        return exchange;
+    }
+
+
+    @Bean
+    Binding binding(Queue queue, FanoutExchange exchange) {
         return BindingBuilder.bind(queue)
-                .to(new FanoutExchange(EXCHANGE_NAME));
+                .to(exchange);
     }
 
     @Bean

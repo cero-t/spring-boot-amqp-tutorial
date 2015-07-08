@@ -1,9 +1,7 @@
 package producer;
 
-import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -28,14 +26,9 @@ public class ProducerApplication {
     }
 
     @Bean
-    RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
-        return new RabbitAdmin(connectionFactory);
-    }
-
-    @Bean
-    Exchange exchange(RabbitAdmin rabbitAdmin) {
+    Exchange exchange(ConnectionFactory connectionFactory) {
         FanoutExchange exchange = new FanoutExchange(EXCHANGE_NAME);
-        rabbitAdmin.declareExchange(exchange);
+        new RabbitAdmin(connectionFactory).declareExchange(exchange);
         return exchange;
     }
 
