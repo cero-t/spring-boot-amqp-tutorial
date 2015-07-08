@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Configuration
 public class AmqpConfig {
-    final static String exchange = "tutorial-3-exchange";
+    static final String EXCHANGE_NAME = "tutorial-3-exchange";
 
     @Bean
     Queue queue(ConnectionFactory connectionFactory) throws IOException {
@@ -45,7 +45,7 @@ public class AmqpConfig {
     @Bean
     Binding binding(Queue queue) {
         return BindingBuilder.bind(queue)
-                .to(new FanoutExchange(exchange));
+                .to(new FanoutExchange(EXCHANGE_NAME));
     }
 
     @Bean
