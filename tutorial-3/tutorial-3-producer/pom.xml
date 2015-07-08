@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-5.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cero.ninja.tutorial.springboot.amqp</groupId>
+        <artifactId>tutorial-3</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>tutorial-3-producer</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>cero.ninja.tutorial.springboot.amqp</groupId>
+            <artifactId>tutorial-3-domain</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+</project>
