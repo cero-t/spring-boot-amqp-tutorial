@@ -1,17 +1,20 @@
 package consumer;
 
-import consumer.receiver.SimpleReceiver;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 
+@EnableRabbit
 @Configuration
-public class AmqpConfig {
+public class AmqpConfig implements RabbitListenerConfigurer {
     static final String QUEUE_NAME = "tutorial-2";
 
     @Bean
@@ -26,21 +29,24 @@ public class AmqpConfig {
         return queue;
     }
 
-    @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, Queue queue, MessageListenerAdapter listenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueues(queue);
-        container.setMessageListener(listenerAdapter);
-        //        container.setPrefetchCount(5);
-        //        container.setAcknowledgeMode(AcknowledgeMode.NONE);
-        return container;
+    @Override
+    public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {
+        registrar.setMessageHandlerMethodFactory(myHandlerMethodFactory());
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(SimpleReceiver receiver) {
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, new Jackson2JsonMessageConverter());
-        messageListenerAdapter.setDefaultListenerMethod("receive");
-        return messageListenerAdapter;
+    public DefaultMessageHandlerMethodFactory myHandlerMethodFactory() {
+        DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
+        factory.setMessageConverter(new MappingJackson2MessageConverter());
+        return factory;
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        // factory.setPrefetchCount(5);
+        // factory.setAcknowledgeMode(AcknowledgeMode.NONE);
+        return factory;
     }
 }
