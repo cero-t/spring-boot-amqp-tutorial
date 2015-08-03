@@ -12,6 +12,7 @@
         <module>tutorial-1</module>
         <module>tutorial-2</module>
         <module>tutorial-3</module>
+        <module>tutorial-4</module>
     </modules>
 
 </project>
