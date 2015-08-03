@@ -1,6 +1,6 @@
 package producer.sender;
 
-import domain.Student;
+import domain.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,14 +13,13 @@ public class SimpleSender {
     RabbitTemplate rabbitTemplate;
 
     public void send() {
-        Student student = new Student();
+        Message message = new Message();
         IntStream.range(0, 10)
                 .forEach(i -> {
-                    student.id = i;
-                    student.name = "TEST" + i;
-                    student.score = 100 - i;
+                    message.id = i;
+                    message.text = "Hello - " + i;
 
-                    rabbitTemplate.convertAndSend("tutorial-2", student);
+                    rabbitTemplate.convertAndSend("tutorial-2", message);
                 });
     }
 }

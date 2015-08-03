@@ -16,7 +16,6 @@
 
     <modules>
         <module>tutorial-1-consumer</module>
-        <module>tutorial-1-domain</module>
         <module>tutorial-1-producer</module>
     </modules>
 </project>
