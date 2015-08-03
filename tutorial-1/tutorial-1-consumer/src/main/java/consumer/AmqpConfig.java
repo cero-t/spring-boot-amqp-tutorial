@@ -14,6 +14,8 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 @EnableRabbit
 @Configuration
 public class AmqpConfig implements RabbitListenerConfigurer {
+    static final String QUEUE_NAME = "tutorial-1";
+
     @Bean
     RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
@@ -21,7 +23,7 @@ public class AmqpConfig implements RabbitListenerConfigurer {
 
     @Bean
     Queue queue(RabbitAdmin rabbitAdmin) {
-        Queue queue = new Queue("tutorial-1", false);
+        Queue queue = new Queue(QUEUE_NAME, false);
         rabbitAdmin.declareQueue(queue);
         return queue;
     }

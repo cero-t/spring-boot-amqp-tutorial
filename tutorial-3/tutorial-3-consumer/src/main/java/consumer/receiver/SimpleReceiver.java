@@ -1,13 +1,18 @@
 package consumer.receiver;
 
 import domain.Student;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleReceiver {
-    public void receive(Student student) throws InterruptedException {
-        System.out.println(student.id);
-        System.out.println(student.name);
-        System.out.println(student.score);
+    @RabbitListener(queues = "tutorial-3-1")
+    public void receive1(Student student) throws InterruptedException {
+        System.out.println("3-1:" + student.id);
+    }
+
+    @RabbitListener(queues = "tutorial-3-2")
+    public void receive2(Student student) throws InterruptedException {
+        System.out.println("3-2:" + student.id);
     }
 }
